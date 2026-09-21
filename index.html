@@ -1,1 +1,286 @@
-jdhfhfhfh
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>PC Setup Checklist</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', -apple-system, sans-serif; background: #0a0c12; color: #e8eaf0; min-height: 100vh; padding-bottom: env(safe-area-inset-bottom, 24px); }
+
+  /* HEADER */
+  .header { display: flex; align-items: center; justify-content: space-between; padding: 16px 16px 0; }
+  .logo { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+  .logo span { color: #00d4ff; }
+  .by-tag { font-size: 12px; font-weight: 600; color: #4a5270; background: #0e1220; border: 1px solid #1a1f2e; border-radius: 99px; padding: 5px 12px; }
+
+  /* STATS CARD */
+  .stats-card { margin: 16px; background: #0e1220; border: 1px solid #1a1f2e; border-radius: 16px; padding: 20px 16px 16px; }
+  .big-count { text-align: center; margin-bottom: 16px; }
+  .big-count .num { font-size: 48px; font-weight: 800; color: #fff; letter-spacing: -2px; line-height: 1; }
+  .big-count .num span { color: #2a3040; }
+  .big-count .label { font-size: 11px; font-weight: 700; color: #4a5270; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }
+
+  .three-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-bottom: 14px; }
+  .stat { text-align: center; padding: 8px 4px; }
+  .stat .val { font-size: 22px; font-weight: 700; }
+  .stat .val.amber { color: #f0a500; }
+  .stat .val.cyan { color: #00d4ff; }
+  .stat .val.white { color: #e8eaf0; }
+  .stat .lbl { font-size: 10px; font-weight: 600; color: #4a5270; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2px; }
+
+  .progress-track { background: #1a1f2e; border-radius: 99px; height: 4px; margin-bottom: 14px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #7b5ea7, #00d4ff); transition: width 0.4s cubic-bezier(0.4,0,0.2,1); }
+
+  .spec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .spec-pill { background: #161b26; border: 1px solid #1a1f2e; border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .spec-pill .sp-label { font-size: 10px; font-weight: 700; color: #4a5270; letter-spacing: 0.08em; text-transform: uppercase; }
+  .spec-pill .sp-val { font-size: 15px; font-weight: 700; color: #e8eaf0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  /* FILTER TABS */
+  .tabs { display: flex; gap: 8px; padding: 0 16px; margin-bottom: 16px; }
+  .tab { flex: 1; text-align: center; padding: 10px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid #1a1f2e; background: #0e1220; color: #4a5270; transition: all 0.15s; }
+  .tab.active { background: #00d4ff; color: #0a0c12; border-color: #00d4ff; }
+
+  /* SECTION */
+  .section-label { font-size: 11px; font-weight: 700; color: #00d4ff; letter-spacing: 0.08em; text-transform: uppercase; padding: 0 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .section-label .count { color: #4a5270; font-weight: 600; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: #1a1f2e; }
+  .section-wrap { margin-bottom: 8px; }
+
+  /* ITEM CARD — spritedex style */
+  .item { margin: 0 16px 10px; background: #0e1220; border: 1px solid #1a1f2e; border-radius: 14px; overflow: hidden; cursor: pointer; transition: all 0.15s; position: relative; }
+  .item:active { transform: scale(0.98); }
+  .item.done { opacity: 0.45; }
+  .item-inner { display: flex; align-items: center; gap: 0; }
+
+  /* Icon panel */
+  .item-icon { width: 72px; min-width: 72px; height: 72px; display: flex; align-items: center; justify-content: center; font-size: 28px; background: #111624; border-right: 1px solid #1a1f2e; flex-shrink: 0; }
+
+  /* Content */
+  .item-content { flex: 1; padding: 12px 12px; min-width: 0; }
+  .item-top { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; flex-wrap: wrap; }
+  .item-status { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; display: flex; align-items: center; gap: 4px; }
+  .item-status.mastered { color: #f0a500; }
+  .item-status.missing { color: #4a5270; }
+  .item-status.pending { color: #4a5270; }
+  .item-name { font-size: 15px; font-weight: 700; color: #e8eaf0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .item.done .item-name { text-decoration: line-through; color: #3d4560; }
+  .item-desc { font-size: 12px; color: #4a5270; margin-top: 2px; line-height: 1.3; }
+
+  /* Badge */
+  .item-badge { position: absolute; top: 10px; right: 10px; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 6px; letter-spacing: 0.03em; text-transform: uppercase; }
+  .badge-done { background: #0d2616; color: #3fb950; border: 1px solid #1a4a28; }
+  .badge-urgent { background: #1f0d0d; color: #f85149; border: 1px solid #3d1a1a; }
+  .badge-soon { background: #1f1a0d; color: #d29922; border: 1px solid #3d320a; }
+  .badge-later { background: #111624; color: #4a5270; border: 1px solid #1a1f2e; }
+  .badge-info { background: #0d1226; color: #00d4ff; border: 1px solid #1a2040; }
+
+  /* Completed overlay bar */
+  .item.done .item-icon { background: #0a0d14; }
+  .completed-bar { display: none; }
+  .item.done .completed-bar { display: flex; align-items: center; justify-content: center; gap: 6px; background: #0d2616; padding: 6px; font-size: 11px; font-weight: 700; color: #3fb950; letter-spacing: 0.06em; text-transform: uppercase; border-top: 1px solid #1a4a28; }
+
+  .hidden { display: none !important; }
+
+  .footer { text-align: center; padding: 24px 16px 16px; font-size: 11px; color: #2a3040; }
+  .footer a { color: #00d4ff; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo"><span>PC</span>LIST</div>
+  <div class="by-tag">by RDOTA</div>
+</div>
+
+<div class="stats-card">
+  <div class="big-count">
+    <div class="num" id="big-num">1<span>/7</span></div>
+    <div class="label">Tasks Complete</div>
+  </div>
+  <div class="three-stats">
+    <div class="stat"><div class="val amber" id="s-done">1</div><div class="lbl">Done</div></div>
+    <div class="stat"><div class="val cyan" id="s-pct">14%</div><div class="lbl">Complete</div></div>
+    <div class="stat"><div class="val white" id="s-left">6</div><div class="lbl">Remaining</div></div>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="bar" style="width:14%"></div></div>
+  <div class="spec-grid">
+    <div class="spec-pill"><span class="sp-label">CPU</span><span class="sp-val">Ryzen 7 5700X</span></div>
+    <div class="spec-pill"><span class="sp-label">GPU</span><span class="sp-val">RTX 5060</span></div>
+    <div class="spec-pill"><span class="sp-label">Price</span><span class="sp-val">£550</span></div>
+    <div class="spec-pill"><span class="sp-label">Payment</span><span class="sp-val">3 × £180</span></div>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="filter('all',this)">All</div>
+  <div class="tab" onclick="filter('pending',this)">Pending</div>
+  <div class="tab" onclick="filter('done',this)">Done</div>
+</div>
+
+<!-- THE DEAL -->
+<div class="section-wrap" data-section="deal">
+  <div class="section-label">The deal <span class="count" id="deal-count">1/1</span></div>
+  <div class="item done" data-cat="deal" onclick="toggle(this)">
+    <div class="item-inner">
+      <div class="item-icon">🖥️</div>
+      <div class="item-content">
+        <div class="item-top"><span class="item-status mastered">🔥 SECURED</span></div>
+        <div class="item-name">Ryzen 7 5700X + RTX 5060</div>
+        <div class="item-desc">£550 · 3 payments of £180</div>
+      </div>
+    </div>
+    <div class="completed-bar">✓ COMPLETED</div>
+    <div class="item-badge badge-done">Done</div>
+  </div>
+</div>
+
+<!-- URGENT -->
+<div class="section-wrap" data-section="urgent">
+  <div class="section-label">Urgent upgrades <span class="count" id="urgent-count">0/2</span></div>
+  <div class="item" data-cat="urgent" onclick="toggle(this)">
+    <div class="item-inner">
+      <div class="item-icon">🔧</div>
+      <div class="item-content">
+        <div class="item-top"><span class="item-status missing">MISSING</span></div>
+        <div class="item-name">Remove the 4GB RAM stick</div>
+        <div class="item-desc">Breaks dual channel — pull it out on day one</div>
+      </div>
+    </div>
+    <div class="completed-bar">✓ COMPLETED</div>
+    <div class="item-badge badge-urgent">Day one</div>
+  </div>
+  <div class="item" data-cat="urgent" onclick="toggle(this)">
+    <div class="item-inner">
+      <div class="item-icon">💾</div>
+      <div class="item-content">
+        <div class="item-top"><span class="item-status missing">MISSING</span></div>
+        <div class="item-name">Corsair Vengeance 2×8GB DDR4 3200MHz</div>
+        <div class="item-desc">~£20–27 on eBay · fills slots 3 & 4 for 32GB</div>
+      </div>
+    </div>
+    <div class="completed-bar">✓ COMPLETED</div>
+    <div class="item-badge badge-urgent">Soon</div>
+  </div>
+</div>
+
+<!-- STORAGE -->
+<div class="section-wrap" data-section="storage">
+  <div class="section-label">Storage <span class="count" id="storage-count">0/1</span></div>
+  <div class="item" data-cat="storage" onclick="toggle(this)">
+    <div class="item-inner">
+      <div class="item-icon">💿</div>
+      <div class="item-content">
+        <div class="item-top"><span class="item-status missing">MISSING</span></div>
+        <div class="item-name">1TB NVMe SSD</div>
+        <div class="item-desc">~£40–55 · Samsung 970 Evo or Crucial P3</div>
+      </div>
+    </div>
+    <div class="completed-bar">✓ COMPLETED</div>
+    <div class="item-badge badge-soon">Soon</div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div class="section-wrap" data-section="admin">
+  <div class="section-label">Admin <span class="count" id="admin-count">0/3</span></div>
+  <div class="item" data-cat="admin" onclick="toggle(this)">
+    <div class="item-inner">
+      <div class="item-icon">📋</div>
+      <div class="item-content">
+        <div class="item-top"><span class="item-status missing">MISSING</span></div>
+        <div class="item-name">Confirm motherboard model</div>
+        <div class="item-desc">Ask seller — need to know M.2 slot count</div>
+      </div>
+    </div>
+    <div class="completed-bar">✓ COMPLETED</div>
+    <div class="item-badge badge-info">Ask him</div>
+  </div>
+  <div class="item" data-cat="admin" onclick="toggle(this)">
+    <div class="item-inner">
+      <div class="item-icon">📝</div>
+      <div class="item-content">
+        <div class="item-top"><span class="item-status missing">MISSING</span></div>
+        <div class="item-name">Get payment deal in writing</div>
+        <div class="item-desc">WhatsApp confirming £180 × 3 payment schedule</div>
+      </div>
+    </div>
+    <div class="completed-bar">✓ COMPLETED</div>
+    <div class="item-badge badge-urgent">Before paying</div>
+  </div>
+  <div class="item" data-cat="admin" onclick="toggle(this)">
+    <div class="item-inner">
+      <div class="item-icon">🚗</div>
+      <div class="item-content">
+        <div class="item-top"><span class="item-status missing">MISSING</span></div>
+        <div class="item-name">Collect the PC</div>
+        <div class="item-desc">Confirm date and time with seller</div>
+      </div>
+    </div>
+    <div class="completed-bar">✓ COMPLETED</div>
+    <div class="item-badge badge-later">Pending</div>
+  </div>
+</div>
+
+<div class="footer">Made by <a href="https://spritedex.xyz">RDOTA</a> · irdotai.github.io/pc-checklist</div>
+
+<script>
+  const items = document.querySelectorAll('.item');
+  const sectionCounts = {
+    deal: { total: 1, el: document.getElementById('deal-count') },
+    urgent: { total: 2, el: document.getElementById('urgent-count') },
+    storage: { total: 1, el: document.getElementById('storage-count') },
+    admin: { total: 3, el: document.getElementById('admin-count') },
+  };
+
+  function update() {
+    const total = items.length;
+    const doneItems = [...items].filter(i => i.classList.contains('done'));
+    const done = doneItems.length;
+    const pct = Math.round((done/total)*100);
+    document.getElementById('bar').style.width = pct + '%';
+    document.getElementById('big-num').innerHTML = done + '<span>/' + total + '</span>';
+    document.getElementById('s-done').textContent = done;
+    document.getElementById('s-pct').textContent = pct + '%';
+    document.getElementById('s-left').textContent = total - done;
+
+    for (const [cat, obj] of Object.entries(sectionCounts)) {
+      const catDone = [...items].filter(i => i.dataset.cat === cat && i.classList.contains('done')).length;
+      obj.el.textContent = catDone + '/' + obj.total;
+    }
+
+    items.forEach(item => {
+      const statusEl = item.querySelector('.item-status');
+      if (item.classList.contains('done')) {
+        statusEl.className = 'item-status mastered';
+        statusEl.textContent = '🔥 MASTERED';
+      } else {
+        statusEl.className = 'item-status missing';
+        statusEl.textContent = 'MISSING';
+      }
+    });
+  }
+
+  function toggle(el) {
+    el.classList.toggle('done');
+    update();
+  }
+
+  let currentFilter = 'all';
+  function filter(type, tab) {
+    currentFilter = type;
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    items.forEach(item => {
+      if (type === 'all') item.classList.remove('hidden');
+      else if (type === 'done') item.classList.toggle('hidden', !item.classList.contains('done'));
+      else if (type === 'pending') item.classList.toggle('hidden', item.classList.contains('done'));
+    });
+  }
+
+  update();
+</script>
+</body>
+</html>
